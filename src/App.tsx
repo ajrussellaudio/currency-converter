@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CurrencySelect } from "./components/CurrencySelect";
 import { AmountInput } from "./components/AmountInput";
 import { Result } from "./components/Result";
+import { Label } from "./components/Label/Label";
 
 function App() {
   const [fromCurrency, setFromCurrency] = useState("GBP");
@@ -9,24 +10,24 @@ function App() {
   const [amount, setAmount] = useState(1);
 
   return (
-    <>
-      <label>
-        Amount
-        <AmountInput value={amount} onChange={setAmount} />
-      </label>
-      <label>
+    <main className="grid grid-cols-2 gap-4 w-3/4 m-auto mt-4">
+      <Label>
         From
         <CurrencySelect value={fromCurrency} onChange={setFromCurrency} />
-      </label>
-      <label>
+      </Label>
+      <Label>
+        Amount
+        <AmountInput value={amount} onChange={setAmount} />
+      </Label>
+      <Label>
         To
         <CurrencySelect value={toCurrency} onChange={setToCurrency} />
-      </label>
-      <label>
+      </Label>
+      <Label>
         Result
         <Result from={fromCurrency} to={toCurrency} amount={amount} />
-      </label>
-    </>
+      </Label>
+    </main>
   );
 }
 
