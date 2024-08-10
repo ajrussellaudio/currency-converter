@@ -8,7 +8,7 @@ export function CurrencySelect() {
       {currencies.data?.map((currency) => {
         return (
           <option key={currency.short_code}>
-            {currency.name} ({currency.short_code})
+            {currency.short_code} ({currency.name})
           </option>
         );
       })}

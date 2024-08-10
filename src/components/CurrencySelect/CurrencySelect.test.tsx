@@ -15,18 +15,6 @@ function renderComponent() {
 const MOCK_API_RESPONSE = {
   response: [
     {
-      id: 46,
-      name: "Euro",
-      short_code: "EUR",
-      code: "978",
-      precision: 2,
-      subunit: 100,
-      symbol: "€",
-      symbol_first: true,
-      decimal_mark: ",",
-      thousands_separator: ".",
-    },
-    {
       id: 147,
       name: "US Dollar",
       short_code: "USD",
@@ -38,25 +26,32 @@ const MOCK_API_RESPONSE = {
       decimal_mark: ".",
       thousands_separator: ",",
     },
+    {
+      id: 46,
+      name: "Euro",
+      short_code: "EUR",
+      code: "978",
+      precision: 2,
+      subunit: 100,
+      symbol: "€",
+      symbol_first: true,
+      decimal_mark: ",",
+      thousands_separator: ".",
+    },
   ],
 };
 
 describe("CurrencySelect", () => {
-  it("provides a list of currencies available on the API", async () => {
+  it("provides a sorted list of currencies available on the API", async () => {
     server.use(
       http.get("https://api.currencybeacon.com/v1/currencies", () => {
         return HttpResponse.json(MOCK_API_RESPONSE);
       }),
     );
     renderComponent();
-    expect(await screen.findAllByRole("option")).toHaveLength(
-      MOCK_API_RESPONSE.response.length,
-    );
-    expect(
-      await screen.findByRole("option", { name: "Euro (EUR)" }),
-    ).toBeInTheDocument();
-    expect(
-      await screen.findByRole("option", { name: "US Dollar (USD)" }),
-    ).toBeInTheDocument();
+    const options = await screen.findAllByRole("option");
+    expect(options).toHaveLength(MOCK_API_RESPONSE.response.length);
+    expect(options[0]).toHaveTextContent("EUR (Euro)");
+    expect(options[1]).toHaveTextContent("USD (US Dollar)");
   });
 });

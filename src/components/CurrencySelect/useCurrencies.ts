@@ -28,7 +28,9 @@ export function useCurrencies() {
         throw new Error("Network response was not ok");
       }
       const { response } = await (res.json() as Promise<CurrencyResponse>);
-      return response;
+      return response.toSorted((a, b) =>
+        a.short_code.localeCompare(b.short_code),
+      );
     },
   });
 }
