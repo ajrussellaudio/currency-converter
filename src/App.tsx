@@ -1,5 +1,11 @@
+import { CurrencySelect } from "./components/CurrencySelect";
+
 function App() {
-  return <>Hello world</>;
+  return (
+    <>
+      <CurrencySelect />
+    </>
+  );
 }
 
 export default App;
