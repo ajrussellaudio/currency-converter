@@ -1,13 +1,21 @@
 import { http, HttpResponse } from "msw";
 import { server } from "../../mocks/node";
 import { CurrencySelect } from "./CurrencySelect";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MockQueryClientProvider } from "../../mocks/MockQueryClientProvider";
+import { ComponentProps } from "react";
 
-function renderComponent() {
+const defaultProps: ComponentProps<typeof CurrencySelect> = {
+  value: "",
+  onChange: () => null,
+};
+
+function renderComponent(
+  props: Partial<ComponentProps<typeof CurrencySelect>> = {},
+) {
   return render(
     <MockQueryClientProvider>
-      <CurrencySelect />
+      <CurrencySelect {...defaultProps} {...props} />
     </MockQueryClientProvider>,
   );
 }
@@ -53,5 +61,39 @@ describe("CurrencySelect", () => {
     expect(options).toHaveLength(MOCK_API_RESPONSE.response.length);
     expect(options[0]).toHaveTextContent("EUR (Euro)");
     expect(options[1]).toHaveTextContent("USD (US Dollar)");
+  });
+
+  it("selects a value by default", async () => {
+    server.use(
+      http.get("https://api.currencybeacon.com/v1/currencies", () => {
+        return HttpResponse.json(MOCK_API_RESPONSE);
+      }),
+    );
+    renderComponent({ value: "EUR" });
+    await waitFor(() => {
+      expect(screen.getAllByRole("option")).toHaveLength(
+        MOCK_API_RESPONSE.response.length,
+      );
+    });
+    expect(screen.getByRole("combobox")).toHaveDisplayValue(["EUR (Euro)"]);
+  });
+
+  it("allows a currency to be selected", async () => {
+    server.use(
+      http.get("https://api.currencybeacon.com/v1/currencies", () => {
+        return HttpResponse.json(MOCK_API_RESPONSE);
+      }),
+    );
+    const onChange = vitest.fn();
+    renderComponent({ value: "EUR", onChange });
+    await waitFor(() => {
+      expect(screen.getAllByRole("option")).toHaveLength(
+        MOCK_API_RESPONSE.response.length,
+      );
+    });
+    fireEvent.change(screen.getByRole("combobox"), {
+      target: { value: "USD" },
+    });
+    expect(onChange).toHaveBeenCalledWith("USD");
   });
 });
