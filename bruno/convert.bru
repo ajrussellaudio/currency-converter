@@ -1,0 +1,18 @@
+meta {
+  name: convert
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://api.currencybeacon.com/v1/convert?from=GBP&to=EUR&amount=1&api_key={{API_KEY}}
+  body: none
+  auth: none
+}
+
+query {
+  from: GBP
+  to: EUR
+  amount: 1
+  api_key: {{API_KEY}}
+}
