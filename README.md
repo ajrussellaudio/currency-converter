@@ -13,7 +13,7 @@ npm install
 Add your Currency Beacon API key to your environment. The simplest way is to add a `.env.local` file at the project root:
 
 ```bash
-API_KEY="My super secret API key"
+VITE_API_KEY="My super secret API key"
 ```
 
 Start the app in dev mode:
